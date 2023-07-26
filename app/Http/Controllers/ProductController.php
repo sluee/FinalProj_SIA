@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -30,7 +31,11 @@ class ProductController extends Controller
     }
     public function create()
     {
-        return inertia('Products/Create');
+        $suppliers = Supplier::orderBy('name', 'asc')->get();
+        return inertia('Products/Create',[
+            'products'=>Product::orderBy('name','asc'),
+            'suppliers'=>$suppliers,
+        ]);
     }
 
     /**
@@ -39,6 +44,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $fields = $request->validate([
+            'sup_id'=>'required|numeric',
             'name' => 'required',
             'description' => 'required',
             'qty' => 'required|numeric',
@@ -56,7 +62,7 @@ class ProductController extends Controller
 
         Product::create($fields);
 
-        return redirect('/products')->banner( 'Product Added Successfully');;
+        return redirect('/products')->banner( 'Product Added Successfully');
     }
 
     /**
@@ -64,7 +70,15 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return inertia('Products/Show', compact('product'));
+        // return inertia('Products/Show', [
+        //     'suppliers'=>Supplier::orderBy('name', 'asc')->get(),
+        //     'product'=>$product,
+        // ]);
+
+        $product->load('supplier');
+        return inertia('Products/Show', [
+            'product' => $product,
+        ]);
     }
 
     /**
@@ -72,7 +86,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return inertia('Products/Edit', compact('product'));
+        return inertia('Products/Edit', [
+            'suppliers'=>Supplier::orderBy('name')->get(),
+            'product'=>$product,
+        ]);
     }
 
     /**
@@ -108,22 +125,26 @@ class ProductController extends Controller
         return back()->banner('Toggle Enable');
     }
 
-    // public function email(Product $product){
-    //     $pdf = Pdf::loadView('pdf.prod-summary',[
-    //         'product'=>$product
-    //     ]);
+    public function email(Product $product){
+        $supplier = $product->supplier;
+        $pdf = Pdf::loadView('pdf.prod-summary',[
+            'product'=>$product,
 
-    //     $filename='products/' .$product->name . ".pdf";
-    //     $pdf->save($filename);
+        ]);
 
-    //     Mail::send('email.sop' ,['product'=>$product], function($message) use ($product, $filename){
-    //         // $message->to($client->email);
-    //         // $message->subject('Summary of Product');
-    //         // $message->attach($filename);
-    //     });
+        $filename='products/' .$product->name . ".pdf";
+        $pdf->save($filename);
 
-    //     return back()->banner('Email has been sent successfully!');
+        Mail::send('emails.sop' ,['product'=>$product], function($message) use ($supplier, $filename){
+            $message->to($supplier->email);
+            $message->subject('Summary of Product');
+            $message->attach($filename);
+        });
+
+        return back()->banner('Email has been sent successfully!');
 
 
-    // }
+    }
+
+
 }

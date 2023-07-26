@@ -54,7 +54,10 @@
                     <th>Price</th>
                     <td>{{$product->price}}</td>
                 </tr>
-
+                <tr>
+                    <th>Supplier</th>
+                    <td>{{$product->supplier->name}}</td>
+                </tr>
                 <br>
             @endforeach
         </table>

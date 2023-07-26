@@ -16,5 +16,8 @@ class Product extends Model
         return $url;
     }
 
-    
+    public function supplier(){
+        return $this->belongsTo(Supplier::class,'sup_id');
+    }
+
 }

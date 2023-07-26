@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('pic')->nullable();
             $table->decimal('price', 10,2);
             $table->integer('qty');
+            $table->bigInteger('sup_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('sup_id')->references('id')->on('suppliers');
         });
     }
 

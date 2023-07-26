@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,10 +38,21 @@ Route::middleware([
     })->name('dashboard');
 });
 
+
 Route::get('/products/pdf',[PdfController::class,'productsSummary']);
 Route::get('/products/pdf/{product}',[PdfController::class,'prodSummary']);
-Route::get('/products/search/{searchKey}', [ProductController::class, 'search']);
+
+
+Route::get('/products/email/{product}', [ProductController::class, 'email']);
 Route::resource('products', ProductController::class);
+Route::get('/products/search/{searchKey}', [ProductController::class, 'search']);
 Route::get('/products/edit/{product}',[ProductController::class,'edit']);
 Route::post('/products/toggle/{product}',[ProductController ::class, 'toggle']);
+
+Route::resource('suppliers', SupplierController::class);
+Route::get('/suppliers/search/{searchKey}', [SupplierController::class, 'search']);
+
+Route::resource('admin', AdminController::class);
+Route::post('/admin/send-email', [AdminController::class, 'bulkEmail']);
+
 

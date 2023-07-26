@@ -54,6 +54,12 @@ const logout = () => {
                                 <NavLink :href="route('products.index')" :active="route().current('products')">
                                     Products
                                 </NavLink>
+                                <NavLink :href="route('suppliers.index')" :active="route().current('suppliers')">
+                                    Suppliers
+                                </NavLink>
+                                <NavLink :href="route('admin.index')" :active="route().current('admin')">
+                                    Send Bulk Email
+                                </NavLink>
                             </div>
                         </div>
 

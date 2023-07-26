@@ -4,6 +4,7 @@
             <img class="h-48 w-full object-cover object-center"  :src="product.picUrl" />
         <div class="p-4">
           <h2 class="mb-2 text-lg font-medium dark:text-white text-gray-900">{{ product.name }}</h2>
+          <!-- <h2 class="mb-2 text-lg font-medium dark:text-white text-gray-900">{{ suppliers.name }}</h2> -->
           <p class="mb-2 text-base dark:text-gray-300 text-gray-700">{{ product.description }}</p>
           <div class="flex items-center">
             <p class="mr-2 text-lg font-semibold text-gray-900 dark:text-white">${{ product.price }}</p>

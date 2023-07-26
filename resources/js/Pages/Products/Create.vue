@@ -8,9 +8,13 @@ const form = useForm({
     price: 0,
     qty: 0,
     pic: null,
+    sup_id:''
 
 })
-
+const props = defineProps({
+    suppliers:Object,
+    product:Object
+})
 function submit() {
     form.post('/products/')
 }
@@ -38,19 +42,27 @@ function submit() {
                                     Product Details
                                 </h4>
                                 <div class="px-5 py-5">
+                                    <label class="font-semibold text-sm text-gray-600  block" for="sup_id">Supplier</label>
+                                    <select name="" id="sup_id" v-model="form.sup_id" class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-gray-600 ">
+                                        <option value="" disabled>Select a Supplier</option>
+                                        <option v-for="sup in suppliers" :value="sup.id" :key="sup.id" >{{ sup.name }}</option>
+                                    </select>
+                                    <!-- <input type="text" class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-gray-600 " v-model="form.name"/> -->
+                                    <div class="text-red-600" v-if="form.errors.name">{{ form.errors.name }}</div>
+
                                     <label class="font-semibold text-sm text-gray-600  block" for="name">Product Name</label>
                                     <input type="text" class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-gray-600 " v-model="form.name"/>
                                     <div class="text-red-600" v-if="form.errors.name">{{ form.errors.name }}</div>
-    
+
                                     <label class="font-semibold text-sm text-gray-600  block" for="price">Price</label>
                                     <input type="number" class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-gray-600 " v-model="form.price" />
                                     <div class="text-red-600" v-if="form.errors.price">{{ form.errors.price }}</div>
-    
+
                                     <label class="font-semibold text-sm text-gray-600  block" for="qty" >Quantity</label>
                                     <input type="number" class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-gray-600 " v-model="form.qty" />
                                     <div class="text-red-600" v-if="form.errors.qty">{{ form.errors.qty }}</div>
-    
-    
+
+
                                     <label class="font-semibold text-sm text-gray-600  block" for="pic" >Product Photo</label>
                                     <input type="file" @input="form.pic = $event.target.files[0]" class="h-full border-gray-800 rounded text-center text-gray-600 "    accept="image/jpeg" />
                                     <progress v-if="form.progress" :value="form.progress.percentage" max="100">
@@ -65,9 +77,9 @@ function submit() {
                                     Create Product
                                 </button>
                             </div>
-    
+
                         </form>
-    
+
                     </div>
                 </div>
             </div>
